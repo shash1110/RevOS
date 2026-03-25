@@ -48,6 +48,18 @@ Every package extends `tsconfig.base.json` which sets `composite: true`. The roo
 - `pnpm run build` — runs `typecheck` first, then recursively runs `build` in all packages that define it
 - `pnpm run typecheck` — runs `tsc --build --emitDeclarationOnly` using project references
 
+## Artifacts
+
+### `artifacts/sales-intelligence` (`@workspace/sales-intelligence`)
+
+React + Vite frontend for the Sales Intelligence live demo app. Four tabs:
+- **Prospecting** — research brief generator (company overview, pain points, buying signals, subject lines, discovery questions)
+- **Deal Intelligence** — risk score (0-100), forecast category, risk factors, next best actions
+- **Revenue Retention** — churn probability, recovery plays, expansion opportunities, talking points
+- **Competitive Intel** — battlecard with strengths/weaknesses comparison, objection handlers, landmines
+
+All four agents call Claude Sonnet via Replit AI Integrations (no user API key needed).
+
 ## Packages
 
 ### `artifacts/api-server` (`@workspace/api-server`)

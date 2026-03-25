@@ -1,15 +1,16 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Sales Intelligence Agent API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: agents
+    description: Claude-powered sales intelligence agents
 paths:
   /healthz:
     get:
@@ -24,6 +25,106 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /agents/prospecting:
+    post:
+      operationId: runProspecting
+      tags: [agents]
+      summary: Run Prospecting Agent
+      description: Generates a research brief for a target prospect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProspectingInput"
+      responses:
+        "200":
+          description: Research brief
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProspectingOutput"
+        "500":
+          description: Agent error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentError"
+  /agents/deal-intelligence:
+    post:
+      operationId: runDealIntelligence
+      tags: [agents]
+      summary: Run Deal Intelligence Agent
+      description: Analyzes a deal and returns risk score and next steps
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DealIntelligenceInput"
+      responses:
+        "200":
+          description: Deal analysis
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DealIntelligenceOutput"
+        "500":
+          description: Agent error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentError"
+  /agents/revenue-retention:
+    post:
+      operationId: runRevenueRetention
+      tags: [agents]
+      summary: Run Revenue Retention Agent
+      description: Analyzes churn risk and generates recovery plays
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RevenueRetentionInput"
+      responses:
+        "200":
+          description: Retention analysis
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RevenueRetentionOutput"
+        "500":
+          description: Agent error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentError"
+  /agents/competitive-intel:
+    post:
+      operationId: runCompetitiveIntel
+      tags: [agents]
+      summary: Run Competitive Intel Agent
+      description: Generates a competitive battlecard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompetitiveIntelInput"
+      responses:
+        "200":
+          description: Battlecard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompetitiveIntelOutput"
+        "500":
+          description: Agent error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentError"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +134,240 @@ components:
           type: string
       required:
         - status
-
+    AgentError:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+    ProspectingInput:
+      type: object
+      properties:
+        companyName:
+          type: string
+        industry:
+          type: string
+        targetRole:
+          type: string
+        yourProduct:
+          type: string
+      required:
+        - companyName
+        - industry
+        - targetRole
+        - yourProduct
+    ProspectingOutput:
+      type: object
+      properties:
+        companyOverview:
+          type: string
+        painPoints:
+          type: array
+          items:
+            type: string
+        buyingSignals:
+          type: array
+          items:
+            type: string
+        approachStrategy:
+          type: string
+        suggestedSubjectLines:
+          type: array
+          items:
+            type: string
+        keyQuestions:
+          type: array
+          items:
+            type: string
+      required:
+        - companyOverview
+        - painPoints
+        - buyingSignals
+        - approachStrategy
+        - suggestedSubjectLines
+        - keyQuestions
+    DealIntelligenceInput:
+      type: object
+      properties:
+        dealName:
+          type: string
+        stage:
+          type: string
+        dealValue:
+          type: number
+        daysInStage:
+          type: number
+        stakeholders:
+          type: string
+        lastActivity:
+          type: string
+        notes:
+          type: string
+      required:
+        - dealName
+        - stage
+        - dealValue
+        - daysInStage
+        - stakeholders
+        - lastActivity
+    DealIntelligenceOutput:
+      type: object
+      properties:
+        riskScore:
+          type: number
+        riskLevel:
+          type: string
+        riskFactors:
+          type: array
+          items:
+            type: string
+        positiveSignals:
+          type: array
+          items:
+            type: string
+        nextBestActions:
+          type: array
+          items:
+            type: string
+        forecastCategory:
+          type: string
+        summary:
+          type: string
+      required:
+        - riskScore
+        - riskLevel
+        - riskFactors
+        - positiveSignals
+        - nextBestActions
+        - forecastCategory
+        - summary
+    RevenueRetentionInput:
+      type: object
+      properties:
+        customerName:
+          type: string
+        contractValue:
+          type: number
+        renewalDate:
+          type: string
+        healthScore:
+          type: number
+        usagePattern:
+          type: string
+        recentIssues:
+          type: string
+        npsScore:
+          type: number
+      required:
+        - customerName
+        - contractValue
+        - renewalDate
+        - healthScore
+        - usagePattern
+    RevenueRetentionOutput:
+      type: object
+      properties:
+        churnRisk:
+          type: string
+        churnProbability:
+          type: number
+        riskIndicators:
+          type: array
+          items:
+            type: string
+        recoveryPlays:
+          type: array
+          items:
+            type: object
+            properties:
+              play:
+                type: string
+              rationale:
+                type: string
+              priority:
+                type: string
+            required:
+              - play
+              - rationale
+              - priority
+        expansionOpportunities:
+          type: array
+          items:
+            type: string
+        recommendedTalkingPoints:
+          type: array
+          items:
+            type: string
+      required:
+        - churnRisk
+        - churnProbability
+        - riskIndicators
+        - recoveryPlays
+        - expansionOpportunities
+        - recommendedTalkingPoints
+    CompetitiveIntelInput:
+      type: object
+      properties:
+        competitor:
+          type: string
+        ourProduct:
+          type: string
+        dealContext:
+          type: string
+        customerPriorities:
+          type: string
+      required:
+        - competitor
+        - ourProduct
+        - customerPriorities
+    CompetitiveIntelOutput:
+      type: object
+      properties:
+        competitorOverview:
+          type: string
+        theirStrengths:
+          type: array
+          items:
+            type: string
+        theirWeaknesses:
+          type: array
+          items:
+            type: string
+        ourAdvantages:
+          type: array
+          items:
+            type: string
+        ourVulnerabilities:
+          type: array
+          items:
+            type: string
+        winThemes:
+          type: array
+          items:
+            type: string
+        objectionHandlers:
+          type: array
+          items:
+            type: object
+            properties:
+              objection:
+                type: string
+              response:
+                type: string
+            required:
+              - objection
+              - response
+        landmines:
+          type: array
+          items:
+            type: string
+      required:
+        - competitorOverview
+        - theirStrengths
+        - theirWeaknesses
+        - ourAdvantages
+        - ourVulnerabilities
+        - winThemes
+        - objectionHandlers
+        - landmines
